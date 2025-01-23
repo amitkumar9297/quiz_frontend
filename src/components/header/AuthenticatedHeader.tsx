@@ -1,12 +1,21 @@
 import React, { useState } from "react";
-import { Stack, Button, IconButton, Avatar, Menu, MenuItem } from "@mui/material";
+import {
+  Stack,
+  Button,
+  IconButton,
+  Avatar,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { useNavigate } from "react-router";
 
 interface AuthenticatedHeaderProps {
   onLogout: () => void;
 }
 
-const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({ onLogout }) => {
+const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
+  onLogout,
+}) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -21,7 +30,7 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({ onLogout }) =
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       {/* Navigation Links */}
-      <Button onClick={() => navigate("/home")}>Home</Button>
+      <Button onClick={() => navigate("/")}>Home</Button>
       <Button onClick={() => navigate("/quiz")}>Quiz</Button>
       <Button onClick={() => navigate("/result")}>Result</Button>
       <Button onClick={() => navigate("/leaderboard")}>Leaderboard</Button>
@@ -36,10 +45,14 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({ onLogout }) =
         onClose={handleMenuClose}
       >
         <MenuItem onClick={() => navigate("/profile")}>Profile</MenuItem>
-        <MenuItem onClick={() => { 
-          handleMenuClose(); 
-          onLogout(); 
-        }}>Logout</MenuItem>
+        <MenuItem
+          onClick={() => {
+            handleMenuClose();
+            onLogout();
+          }}
+        >
+          Logout
+        </MenuItem>
       </Menu>
     </Stack>
   );

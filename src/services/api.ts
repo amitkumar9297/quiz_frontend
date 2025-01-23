@@ -27,7 +27,7 @@ interface LoginResponse {
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:5000/api/" }), // Update base URL
+  baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_BASE_URL}/` }), // Update base URL
   endpoints: (builder) => ({
     getUserById: builder.query<User, string>({
       query: (id) => `users/${id}`,
