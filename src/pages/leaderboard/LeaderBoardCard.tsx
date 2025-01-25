@@ -24,11 +24,11 @@ interface QuizCardProps {
  * @returns {ReactElement} - A React element representing the quiz card.
  */
 
-const QuizCard: React.FC<QuizCardProps> = ({ title, description, duration, questionCount, quizId }) => {
+const LeaderBoardCard: React.FC<QuizCardProps> = ({ title, description, duration, questionCount, quizId }) => {
     const navigate = useNavigate(); 
-    const handleTakeQuiz = () => {
-        navigate(`/quiz/${quizId}`);
-    };
+    // const handleTakeQuiz = () => {
+    //     navigate(`/quiz/${quizId}`);
+    // };
     return (
         <Card variant="outlined" sx={{ borderRadius: '0.8rem' }}>
             <CardContent>
@@ -39,8 +39,8 @@ const QuizCard: React.FC<QuizCardProps> = ({ title, description, duration, quest
             </CardContent>
             <CardActions>
                 <Box display="flex" justifyContent="center" width="100%">
-                <Button variant="contained" color="primary" onClick={handleTakeQuiz}>
-                    Take Quiz
+                <Button variant="contained" color="primary" >
+                    See LeaderBoard
                 </Button>
                 </Box>
             </CardActions>
@@ -48,4 +48,4 @@ const QuizCard: React.FC<QuizCardProps> = ({ title, description, duration, quest
     );
 };
 
-export default QuizCard;
+export default LeaderBoardCard;

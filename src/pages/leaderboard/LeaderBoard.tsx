@@ -2,7 +2,7 @@ import React  from "react";
 import { Box, Skeleton, Typography } from "@mui/material";
 import { ToastContainer, toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import QuizCard from "./QuizCard"; // Import the QuizCard component
+import LeaderBoardCard from "./LeaderBoardCard"; // Import the LeaderBoardCard component
 import { useGetQuizzesQuery } from "../../services/quizzesApi";
 
 
@@ -13,7 +13,7 @@ import { useGetQuizzesQuery } from "../../services/quizzesApi";
  * @returns A JSX element that displays a list of quizzes.
  */
 
-const QuizList: React.FC = () => {
+const LeaderBoard: React.FC = () => {
 
   const { data: quizzes = [], isLoading, isError } = useGetQuizzesQuery();
 
@@ -51,7 +51,7 @@ const QuizList: React.FC = () => {
           gap={2}
         >
           {quizzes.map((quiz) => (
-            <QuizCard
+            <LeaderBoardCard
               key={quiz._id}
               title={quiz.title}
               description={quiz.description}
@@ -68,4 +68,4 @@ const QuizList: React.FC = () => {
   );
 };
 
-export default QuizList;
+export default LeaderBoard;

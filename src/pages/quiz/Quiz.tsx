@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   Button,
   Typography,
@@ -8,85 +9,76 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
-import { useForm, Controller, set } from "react-hook-form";
-import axios from "axios";
-import { useParams, useLocation, useNavigate } from "react-router";
+import { useForm, Controller } from "react-hook-form";
+import { useParams, useNavigate } from "react-router-dom"; // Ensure you import from react-router-dom
+import { useGetQuizByIdQuery, useStartQuizMutation } from "../../services/quizzesApi";
 
-// Define the Question interface
 interface Question {
-  _id: string; // Unique ID for the question
-  quizId: string; // ID of the quiz this question belongs to
-  questionText: string; // The text of the question
-  options: string[]; // An array of answer options for the question
-  correctAnswer: string; // The correct answer for the question
-  questionType: "MCQ" | "TRUE_FALSE"; // Type of the question (Multiple Choice or True/False)
-  createdAt: string; // Timestamp when the question was created
-  updatedAt: string; // Timestamp when the question was last updated
+  _id: string; 
+  quizId: string; 
+  questionText: string; 
+  options: string[]; 
+  correctAnswer: string; 
+  questionType: "MCQ" | "TRUE_FALSE"; 
+  createdAt: string; 
+  updatedAt: string;
 }
 
 interface Quiz {
-  _id: string; // Unique ID for the quiz
-  title: string; // Title of the quiz
-  description: string; // Description of the quiz
-  duration: number; // Duration of the quiz in minutes
-  questions: Question[]; // Array of questions in this quiz
-  createdBy?: string | null; // ID of the user who created the quiz, optional
-  isActive: boolean; // Indicates if the quiz is active
-  createdAt: string; // Timestamp when the quiz was created
-  updatedAt: string; // Timestamp when the quiz was last updated
+  _id: string; 
+  title: string; 
+  description: string; 
+  duration: number; 
+  questions: Question[]; 
+  createdBy?: string | null; 
+  isActive: boolean; 
+  createdAt: string; 
+  updatedAt: string; 
 }
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const userId = localStorage.getItem("userId");
-  const [questions, setQuestions] = useState([]);
   const { quizId } = useParams<{ quizId: string }>();
   const token = localStorage.getItem("accessToken");
   const { control, handleSubmit } = useForm();
-  const [timeoutOpen, setTimeoutOpen] = useState(false);
-  const [timeRemaining, setTimeRemaining] = useState(0); // 5 minutes
 
+  const [startQuiz, { isLoading: isStartingQuiz }] = useStartQuizMutation();
+  const { data: quiz, isLoading: isQuizLoading, isError: isQuizError } = quizId 
+    ? useGetQuizByIdQuery(quizId) 
+    : { data: null, isLoading: false, isError: false };
+  
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [quizAttemptId, setQuizAttemptId] = useState<string | null>(null); // State to store quizAttemptId
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [timeoutOpen, setTimeoutOpen] = useState(false);
   let intervalId: NodeJS.Timeout | undefined;
 
   useEffect(() => {
-    const startQuiz = async () => {
+    const initiateQuiz = async () => {
+      if (!quizId) return;
+
       try {
-        const res = await axios.post(
-          `${import.meta.env.VITE_BASE_URL}/quiz-attempts/`,
-          { userId: userId, quizId: quizId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("startQuiz", res.data);
-      } catch (err) {
-        console.log(err);
+        // Start the quiz attempt
+        const response = await startQuiz({ userId, quizId, token }).unwrap();
+
+        // Assuming response contains savedQuizAttempt and questions
+        setQuizAttemptId(response.savedQuizAttempt._id); // Set quizAttemptId
+
+        // Set the questions and time remaining from the response
+        setQuestions(response.questions);
+        setTimeRemaining(response.savedQuizAttempt.duration * 60); // Set time remaining in seconds
+      } catch (error) {
+        console.error("Error starting the quiz:", error);
       }
     };
-    startQuiz();
-  }, []);
+
+    initiateQuiz();
+  }, [startQuiz, userId, quizId, token]);
 
   useEffect(() => {
-    const fetchQuiz = async () => {
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_BASE_URL}/quizzes/${quizId}`
-        );
-        const filteredQuestions = res.data.questions;
-        setQuestions(filteredQuestions);
-        setTimeRemaining(res.data.duration * 60 - 1);
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    fetchQuiz();
-  }, []);
+    if (timeRemaining <= 0) return;
 
-  useEffect(() => {
     intervalId = setInterval(() => {
       setTimeRemaining((prev) => {
         if (prev <= 1) {
@@ -101,7 +93,7 @@ const Quiz: React.FC = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, []);
+  }, [timeRemaining]);
 
   const handleTimeout = () => {
     setTimeoutOpen(true);
@@ -109,7 +101,7 @@ const Quiz: React.FC = () => {
 
   const handleCloseTimeout = () => {
     setTimeoutOpen(false);
-    window.location.href = "/quiz"; // Redirect to the quiz page
+    navigate("/quiz");
   };
 
   const onSubmit = async (data: any) => {
@@ -123,6 +115,7 @@ const Quiz: React.FC = () => {
     const payload = {
       userId,
       quizId,
+      quizAttemptId, // Include quizAttemptId in the payload
       answers,
     };
 
@@ -145,9 +138,12 @@ const Quiz: React.FC = () => {
     }
   };
 
+  if (isQuizLoading || isStartingQuiz) return <div>Loading quiz...</div>;
+  if (isQuizError) return <div>Error loading quiz!</div>;
+
   return (
     <div>
-      <Typography variant="h4">Quiz</Typography>
+      <Typography variant="h4">Quiz: {quiz?.title}</Typography>
       <Typography variant="h6">
         Time Remaining: {Math.floor(timeRemaining / 60)}:
         {("0" + (timeRemaining % 60)).slice(-2)}
