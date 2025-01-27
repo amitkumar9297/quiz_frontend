@@ -8,6 +8,17 @@ import { logout } from "../../store/reducers/authReducer";
 import AuthenticatedHeader from "./AuthenticatedHeader";
 import logo from "../../../public/logo.webp";
 
+/**
+ * A React component that displays a header with a logo, a title, and a button to either
+ * login or logout.
+ *
+ * It uses the ThemeContext to toggle the theme of the header and the button.
+ *
+ * If the user is authenticated, it displays an AuthenticatedHeader component with a logout
+ * button. Otherwise, it displays a login button.
+ *
+ * @returns A JSX element that represents the header.
+ */
 const Header: React.FC = () => {
   const navigation = useNavigate();
   const themeContext = useContext(ThemeContext);

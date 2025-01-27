@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Basic from "./layouts/Basic";
 import ErrorBoundary from "./components/ErrorBoundary";
 import LeaderBoard from "./pages/leaderboard/LeaderBoard";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 const Login = React.lazy(() => import("./pages/Auth/Login"));
 const Signup = React.lazy(() => import("./pages/Auth/Signup"));
 const Home = React.lazy(() => import("./pages/homepage"));
@@ -22,6 +24,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/forgot" element={<ForgotPassword />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/quiz" element={<QuizList />} />
             <Route path="/quiz/:quizId" element={<Quiz />} />
             <Route path="/result" element={<Result />} />

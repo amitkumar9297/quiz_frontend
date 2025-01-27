@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { baseQueryWithReauth } from './api';
 
 export interface Quiz {
   _id: string;
@@ -23,7 +24,7 @@ export interface QuizAttemptResponse {
 
 export const quizzesApi = createApi({
   reducerPath: 'quizzesApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/' }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     getQuizzes: builder.query<Quiz[], void>({
       query: () => '/quizzes/',

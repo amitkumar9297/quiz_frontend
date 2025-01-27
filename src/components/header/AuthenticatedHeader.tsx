@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { motion } from 'framer-motion';
 import {
   Stack,
   Button,
@@ -12,6 +13,34 @@ import { useNavigate } from "react-router";
 interface AuthenticatedHeaderProps {
   onLogout: () => void;
 }
+
+const buttonUI = {
+  whileHover: {
+    scale: 1.1, 
+    transition: {
+      duration: 0.3, 
+      ease: [0.42, 0, 0.58, 1], 
+    },
+  },
+  whileTap: {
+    scale: 0.95, 
+  },
+};
+
+/**
+ * A React component that displays a navigation bar for authenticated users.
+ *
+ * It displays 4 navigation links to the home page, quiz page, result page, and
+ * leaderboard page. Additionally, it displays an avatar with a dropdown menu,
+ * which allows users to navigate to their profile page or to logout.
+ *
+ * @function AuthenticatedHeader
+ * @param {function} onLogout - A callback function that is called when the user
+ * logs out.
+ * @returns {ReactElement} A React element that represents the authenticated
+ * header.
+ */
+
 
 const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
   onLogout,
@@ -30,10 +59,29 @@ const AuthenticatedHeader: React.FC<AuthenticatedHeaderProps> = ({
   return (
     <Stack direction="row" alignItems="center" spacing={2}>
       {/* Navigation Links */}
-      <Button onClick={() => navigate("/")}>Home</Button>
-      <Button onClick={() => navigate("/quiz")}>Quiz</Button>
-      <Button onClick={() => navigate("/result")}>Result</Button>
-      <Button onClick={() => navigate("/leaderboard")}>Leaderboard</Button>
+      <motion.div {...buttonUI}>
+        <Button variant="ghost" onClick={() => navigate('/')}>
+          Home
+        </Button>
+      </motion.div>
+
+      <motion.div {...buttonUI}>
+        <Button variant="ghost" onClick={() => navigate('/quiz')}>
+          Quiz
+        </Button>
+      </motion.div>
+
+      <motion.div {...buttonUI}>
+        <Button variant="ghost" onClick={() => navigate('/result')}>
+          Result
+        </Button>
+      </motion.div>
+
+      <motion.div {...buttonUI}>
+        <Button variant="ghost" onClick={() => navigate('/leaderboard')}>
+          Leaderboard
+        </Button>
+      </motion.div>
 
       {/* Avatar with Dropdown Menu */}
       <IconButton onClick={handleMenuOpen}>

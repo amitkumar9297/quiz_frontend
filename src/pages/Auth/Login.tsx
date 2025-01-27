@@ -101,6 +101,12 @@ const Login: React.FC = () => {
             {isLoading ? 'Logging In...' : 'Login'}
           </Button>
           <Typography variant="body2" align="center" sx={{ marginTop: '1rem' }}>
+            Don’t know your password?{' '}
+            <a href="/forgot" style={{ color: 'blue' }}>
+              forgot password
+            </a>
+          </Typography>
+          <Typography variant="body2" align="center" sx={{ marginTop: '1rem' }}>
             Don’t have an account?{' '}
             <a href="/signup" style={{ color: 'blue' }}>
               Sign up

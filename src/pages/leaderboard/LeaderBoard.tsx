@@ -1,6 +1,6 @@
 import React  from "react";
 import { Box, Skeleton, Typography } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import LeaderBoardCard from "./LeaderBoardCard"; // Import the LeaderBoardCard component
 import { useGetQuizzesQuery } from "../../services/quizzesApi";
@@ -38,13 +38,14 @@ const LeaderBoard: React.FC = () => {
     );
   }
   if (isError) return toast.error("Something went wrong");
+  if(quizzes.length === 0){
+    return  <Typography>No quizzes available.</Typography>
+  }
 
   return (
     <>
     <Box margin={2}>
-      {quizzes.length === 0 ? (
-        <Typography>No quizzes available.</Typography>
-      ) : (
+      
         <Box
           display="grid"
           gridTemplateColumns="repeat(auto-fill, minmax(300px, 1fr))"
@@ -61,9 +62,7 @@ const LeaderBoard: React.FC = () => {
             />
           ))}
         </Box>
-      )}
     </Box>
-    <ToastContainer />
     </>
   );
 };

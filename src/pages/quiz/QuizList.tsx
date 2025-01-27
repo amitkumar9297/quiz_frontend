@@ -1,6 +1,7 @@
 import React  from "react";
 import { Box, Skeleton, Typography } from "@mui/material";
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
+import AnimatedWrapper from '../../components/AnimatedWrapper';
 import "react-toastify/dist/ReactToastify.css";
 import QuizCard from "./QuizCard"; // Import the QuizCard component
 import { useGetQuizzesQuery } from "../../services/quizzesApi";
@@ -41,6 +42,7 @@ const QuizList: React.FC = () => {
 
   return (
     <>
+    <AnimatedWrapper key="login">
     <Box margin={2}>
       {quizzes.length === 0 ? (
         <Typography>No quizzes available.</Typography>
@@ -63,7 +65,7 @@ const QuizList: React.FC = () => {
         </Box>
       )}
     </Box>
-    <ToastContainer />
+    </AnimatedWrapper>
     </>
   );
 };

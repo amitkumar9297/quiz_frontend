@@ -12,6 +12,7 @@ import {
 import { useForm, Controller } from "react-hook-form";
 import { useParams, useNavigate } from "react-router-dom"; // Ensure you import from react-router-dom
 import { useGetQuizByIdQuery, useStartQuizMutation } from "../../services/quizzesApi";
+import AnimatedWrapper from "../../components/AnimatedWrapper";
 
 interface Question {
   _id: string; 
@@ -35,6 +36,17 @@ interface Quiz {
   createdAt: string; 
   updatedAt: string; 
 }
+
+/**
+ * A React functional component that represents a quiz page. It fetches quiz
+ * details and allows users to take a quiz. The component handles quiz initiation,
+ * manages the timer for the quiz, and submits quiz answers. It displays a loading
+ * state while fetching quiz data and an error state if the quiz fails to load.
+ * 
+ * Utilizes React Hook Form for form management and MUI components for UI design.
+ * 
+ * @returns {JSX.Element} - A JSX element representing the quiz page.
+ */
 
 const Quiz: React.FC = () => {
   const navigate = useNavigate();
@@ -142,6 +154,7 @@ const Quiz: React.FC = () => {
   if (isQuizError) return <div>Error loading quiz!</div>;
 
   return (
+    <AnimatedWrapper key="quiz">
     <div>
       <Typography variant="h4">Quiz: {quiz?.title}</Typography>
       <Typography variant="h6">
@@ -159,7 +172,7 @@ const Quiz: React.FC = () => {
             {question.options.map((option) => (
               <Controller
                 key={option}
-                name={question._id} // Use question ID as the name for form handling
+                name={question._id} 
                 control={control}
                 defaultValue=""
                 render={({ field }) => (
@@ -167,8 +180,8 @@ const Quiz: React.FC = () => {
                     <input
                       type="radio"
                       value={option}
-                      onChange={() => field.onChange(option)} // Handle selection
-                      checked={field.value === option} // Check if this option is selected
+                      onChange={() => field.onChange(option)} 
+                      checked={field.value === option} 
                       style={{ margin: "5px" }}
                     />
                     <label>{option}</label>
@@ -195,6 +208,7 @@ const Quiz: React.FC = () => {
         </DialogActions>
       </Dialog>
     </div>
+    </AnimatedWrapper>
   );
 };
 

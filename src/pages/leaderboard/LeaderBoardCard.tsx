@@ -24,6 +24,19 @@ interface QuizCardProps {
  * @returns {ReactElement} - A React element representing the quiz card.
  */
 
+/**
+ * A React component that displays a quiz's details in a card format for the
+ * leaderboard. The card displays the quiz title, description, duration, and
+ * number of questions. The component also includes a button that allows the
+ * user to see the leaderboard for the quiz.
+ * 
+ * @param {string} title - The title of the quiz.
+ * @param {string} description - The description of the quiz.
+ * @param {number} duration - The duration of the quiz in minutes.
+ * @param {number} questionCount - The number of questions in the quiz.
+ * @param {string} quizId - The id of the quiz.
+ * @returns {ReactElement} - A React element representing the quiz card.
+ */
 const LeaderBoardCard: React.FC<QuizCardProps> = ({ title, description, duration, questionCount, quizId }) => {
     const navigate = useNavigate(); 
     // const handleTakeQuiz = () => {
